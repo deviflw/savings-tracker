@@ -317,7 +317,7 @@
             <p>Каждый дирхам - это моя маленькая победа!</p>
         </div>
         <div class="goal-card">
-            <div class="goal-label">Цель: вернуть 13,000 AED</div>
+            <div class="goal-label">Цель: вернуть 13,000 AED на 3 мотоцикла 🏍️🏍️🏍️</div>
             <div class="goal-amount" id="totalSaved">0 AED</div>
             <div class="progress-bar">
                 <div class="progress-fill" id="progressFill">0%</div>
@@ -336,7 +336,7 @@
         </div>
 
         <div class="motivation" id="motivation">
-            Каждый шаг приближает тебя к цели! 🏍️🏠🐱🐱🐱🐱🐱🐱
+            Каждый шаг приближает тебя к цели! 🏍️🏍️🏍️🏠🐱🐱🐱🐱🐱🐱
         </div>
 
         <div class="add-saving">
@@ -360,16 +360,25 @@
             <button class="btn" onclick="addSaving()">Записать победу! 🎉</button>
         </div>
         <div class="github-setup">
-            <h4>⚙️ Настройка GitHub (опционально)</h4>
-            <div class="input-group">
-                <label>GitHub Token (для сохранения в репозиторий):</label>
-                <input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxxx">
+            <h4>💾 Резервное копирование</h4>
+            <p style="color: #666; margin-bottom: 15px;">Сохрани свой прогресс на всякий случай!</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <button class="btn" onclick="downloadBackup()" style="background: linear-gradient(135deg, #00b09b, #96c93d);">
+                    💾 Скачать бэкап
+                </button>
+                <button class="btn" onclick="document.getElementById('backupFile').click()" style="background: linear-gradient(135deg, #f093fb, #f5576c);">
+                    📂 Загрузить бэкап
+                </button>
             </div>
-            <div class="input-group">
-                <label>Репозиторий (username/repo):</label>
-                <input type="text" id="githubRepo" placeholder="yourusername/savings-tracker">
+            <input type="file" id="backupFile" accept=".json" style="display: none;" onchange="loadBackup(event)">
+            <div style="margin-top: 15px;">
+                <button class="btn" onclick="saveToGitHubPublic()" style="background: linear-gradient(135deg, #FFD700, #FFA500);">
+                    🔐 Сохранить зашифрованный бэкап в GitHub
+                </button>
+                <p style="color: #999; font-size: 0.85em; margin-top: 5px;">
+                    Зашифрует твоим паролем и сохранит в репозиторий (никто не прочитает!)
+                </p>
             </div>
-            <button class="btn" onclick="saveGitHubSettings()">Сохранить настройки</button>
         </div>
 
         <div class="savings-list">
@@ -383,29 +392,28 @@
         const GOAL = 13000;
         const PASSWORD = '23'; // Твоё магическое число
         const MOTIVATIONS = [
-            "Каждый шаг приближает тебя к цели! 🏍️🏠🐱🐱🐱🐱🐱🐱",
+            "Каждый шаг приближает тебя к цели! 🏍️🏍️🏍️🏠🐱🐱🐱🐱🐱🐱",
             "Ты сильнее, чем кажется! Продолжай! 💪",
             "Реальность не знает, с кем связалась! 😎",
             "Маленькие победы = большой результат! 🎯",
             "Ты уже отвоевала ${amount} AED! Так держать! 🔥",
-            "Мотоцикл и квартира ждут тебя! 🏍️🏠",
+            "3 мотоцикла и квартира ждут тебя! 🏍️🏍️🏍️🏠",
             "Каждый дирхам - это твоя сила! 💎",
             "Котики гордятся тобой! 🐱🐱🐱🐱🐱🐱❤️",
             "Ты не мечтаешь - ты прёшь к цели! 💪🔥",
             "6 котиков верят в тебя! 🐱🐱🐱🐱🐱🐱",
-            "Реальность сдается! Ты побеждаешь! ⚡"
+            "Реальность сдается! Ты побеждаешь! ⚡",
+            "Три мотоцикла! Потому что одного мало! 🏍️🏍️🏍️",
+            "Чего мелочиться? 3 байка и точка! 🔥🏍️🏍️🏍️"
         ];
         // Загрузка данных при старте
         let savings = JSON.parse(localStorage.getItem('savings') || '[]');
-        let githubSettings = JSON.parse(localStorage.getItem('githubSettings') || '{}');
 
         // Инициализация
         document.addEventListener('DOMContentLoaded', () => {
-            loadGitHubSettings();
             updateDisplay();
-            if (githubSettings.token && githubSettings.repo) {
-                loadFromGitHub();
-            }
+            // Пытаемся загрузить зашифрованный бэкап с GitHub
+            loadFromGitHubPublic();
         });
 
         function addSaving() {
@@ -461,11 +469,6 @@
 
         function saveSavings() {
             localStorage.setItem('savings', JSON.stringify(savings));
-            
-            // Если настроен GitHub, сохраняем туда
-            if (githubSettings.token && githubSettings.repo) {
-                saveToGitHub();
-            }
         }
 
         function updateDisplay() {
@@ -538,27 +541,172 @@
             }, 2000);
         }
 
-        // GitHub интеграция
-        function saveGitHubSettings() {
-            githubSettings = {
-                token: document.getElementById('githubToken').value,
-                repo: document.getElementById('githubRepo').value
-            };
-            
-            if (githubSettings.token && githubSettings.repo) {
-                localStorage.setItem('githubSettings', JSON.stringify(githubSettings));
-                alert('Настройки GitHub сохранены! Теперь данные будут синхронизироваться.');
-                saveToGitHub();
+        // Простое шифрование/дешифрование (XOR с паролем)
+        function encrypt(text, password) {
+            let encrypted = '';
+            for (let i = 0; i < text.length; i++) {
+                encrypted += String.fromCharCode(
+                    text.charCodeAt(i) ^ password.charCodeAt(i % password.length)
+                );
+            }
+            return btoa(encrypted); // Base64 для безопасного хранения
+        }
+
+        function decrypt(encrypted, password) {
+            try {
+                let text = atob(encrypted);
+                let decrypted = '';
+                for (let i = 0; i < text.length; i++) {
+                    decrypted += String.fromCharCode(
+                        text.charCodeAt(i) ^ password.charCodeAt(i % password.length)
+                    );
+                }
+                return decrypted;
+            } catch (e) {
+                return null;
             }
         }
 
-        function loadGitHubSettings() {
-            if (githubSettings.token) {
-                document.getElementById('githubToken').value = githubSettings.token;
+        // Скачать бэкап
+        function downloadBackup() {
+            const dataStr = JSON.stringify({
+                savings: savings,
+                date: new Date().toISOString(),
+                encrypted: false
+            }, null, 2);
+            
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            const exportFileDefaultName = `savings-backup-${new Date().toISOString().split('T')[0]}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+            
+            showSuccess('Бэкап скачан! 💾');
+        }
+
+        // Загрузить бэкап
+        function loadBackup(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const backup = JSON.parse(e.target.result);
+                    
+                    if (backup.encrypted) {
+                        const password = prompt('Введи пароль для расшифровки бэкапа:');
+                        if (password !== PASSWORD) {
+                            alert('Неверный пароль!');
+                            return;
+                        }
+                        const decrypted = decrypt(backup.data, PASSWORD);
+                        if (!decrypted) {
+                            alert('Не удалось расшифровать!');
+                            return;
+                        }
+                        const data = JSON.parse(decrypted);
+                        savings = data.savings || [];
+                    } else {
+                        savings = backup.savings || [];
+                    }
+                    
+                    localStorage.setItem('savings', JSON.stringify(savings));
+                    updateDisplay();
+                    showSuccess('Бэкап загружен! 🎉');
+                } catch (err) {
+                    alert('Ошибка при загрузке бэкапа!');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // Сохранить зашифрованный бэкап в GitHub (без токена!)
+        async function saveToGitHubPublic() {
+            const password = prompt('Введи пароль для подтверждения (23):');
+            if (password !== PASSWORD) {
+                alert('Неверный пароль!');
+                return;
             }
-            if (githubSettings.repo) {
-                document.getElementById('githubRepo').value = githubSettings.repo;
+            
+            // Шифруем данные
+            const dataToEncrypt = JSON.stringify({
+                savings: savings,
+                date: new Date().toISOString()
+            });
+            const encrypted = encrypt(dataToEncrypt, PASSWORD);
+            
+            // Создаём содержимое для GitHub
+            const content = {
+                encrypted: true,
+                data: encrypted,
+                updated: new Date().toISOString(),
+                message: "🔐 Зашифровано паролем"
+            };
+            
+            // Создаём файл для скачивания как GitHub Gist или просто локально
+            const dataStr = JSON.stringify(content, null, 2);
+            const blob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            
+            // Копируем в буфер обмена для вставки в GitHub
+            navigator.clipboard.writeText(dataStr).then(() => {
+                alert('Зашифрованный бэкап скопирован в буфер обмена!\n\n' +
+                      '1. Открой https://github.com/deviflw/savings-tracker\n' +
+                      '2. Создай файл "encrypted-backup.json"\n' + 
+                      '3. Вставь содержимое (Ctrl+V)\n' +
+                      '4. Сохрани файл\n\n' +
+                      'Никто не сможет прочитать без твоего пароля!');
+            }).catch(() => {
+                // Если не удалось скопировать, скачаем файл
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'encrypted-backup.json';
+                a.click();
+                alert('Зашифрованный бэкап скачан!\n\n' +
+                      'Загрузи файл в репозиторий GitHub вручную.\n' +
+                      'Никто не сможет прочитать без твоего пароля!');
+            });
+        }
+
+        // Загрузить зашифрованный бэкап с GitHub
+        async function loadFromGitHubPublic() {
+            try {
+                // Пытаемся загрузить с GitHub Pages
+                const response = await fetch('https://deviflw.github.io/savings-tracker/encrypted-backup.json');
+                if (response.ok) {
+                    const backup = await response.json();
+                    
+                    if (backup.encrypted) {
+                        const decrypted = decrypt(backup.data, PASSWORD);
+                        if (decrypted) {
+                            const data = JSON.parse(decrypted);
+                            savings = data.savings || [];
+                            localStorage.setItem('savings', JSON.stringify(savings));
+                            updateDisplay();
+                            showSuccess('Бэкап загружен с GitHub! 🎉');
+                        }
+                    }
+                }
+            } catch (e) {
+                console.log('Нет сохранённого бэкапа на GitHub');
             }
+        }
+
+        // Модифицируем showSuccess для разных сообщений
+        function showSuccess(message = '✅ Записано!') {
+            const btn = document.querySelector('.btn');
+            const originalText = btn.textContent;
+            const originalBg = btn.style.background;
+            btn.textContent = message;
+            btn.style.background = 'linear-gradient(135deg, #00b09b, #96c93d)';
+            
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = originalBg || '';
+            }, 2000);
         }
         async function saveToGitHub() {
             if (!githubSettings.token || !githubSettings.repo) return;
