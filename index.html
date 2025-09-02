@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💪 Отвоевываю у реальности</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .goal-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            animation: slideUp 0.6s ease;
+        }
+
+        .goal-amount {
+            font-size: 3em;
+            font-weight: bold;
+            color: #667eea;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .goal-label {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #f0f0f0;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 15px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .add-saving {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            animation: slideUp 0.7s ease;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .input-group input, .input-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus, .input-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .password-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .password-group input {
+            flex: 1;
+        }
+
+        .password-hint {
+            color: #999;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .savings-list {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            animation: slideUp 0.8s ease;
+        }
+
+        .savings-list h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .saving-item {
+            padding: 15px;
+            border-left: 4px solid #667eea;
+            background: #f8f9fa;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .saving-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .saving-amount {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .saving-date {
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        .saving-description {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .motivation {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.1em;
+            animation: pulse 2s infinite;
+        }
+
+        .github-setup {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .github-setup h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .shake {
+            animation: shake 0.3s ease-in-out;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .stat-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💪 Отвоевываю у реальности</h1>
+            <p>Каждый дирхам - это моя маленькая победа!</p>
+        </div>
+        <div class="goal-card">
+            <div class="goal-label">Цель: вернуть 13,000 AED</div>
+            <div class="goal-amount" id="totalSaved">0 AED</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill">0%</div>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value" id="daysCount">0</div>
+                <div class="stat-label">Дней борьбы</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="avgSaving">0</div>
+                <div class="stat-label">AED в день</div>
+            </div>
+        </div>
+
+        <div class="motivation" id="motivation">
+            Каждый шаг приближает тебя к цели! 🏍️🏠🐱🐱🐱🐱🐱🐱
+        </div>
+
+        <div class="add-saving">
+            <h3>➕ Добавить экономию</h3>
+            <div class="input-group">
+                <label>Сколько сэкономила (AED):</label>
+                <input type="number" id="amountInput" placeholder="50" min="1">
+            </div>
+            <div class="input-group">
+                <label>Как удалось сэкономить:</label>
+                <textarea id="descriptionInput" rows="2" placeholder="Сварила рис вместо заказа еды"></textarea>
+            </div>
+            <div class="input-group">
+                <label>Пароль (магическое число):</label>
+                <div class="password-group">
+                    <input type="password" id="passwordInput" placeholder="Введи пароль">
+                </div>
+                <div class="password-hint">Подсказка: твоё любимое число 😉</div>
+                <div class="error-message" id="passwordError">Неверный пароль!</div>
+            </div>
+            <button class="btn" onclick="addSaving()">Записать победу! 🎉</button>
+        </div>
+        <div class="github-setup">
+            <h4>⚙️ Настройка GitHub (опционально)</h4>
+            <div class="input-group">
+                <label>GitHub Token (для сохранения в репозиторий):</label>
+                <input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxxx">
+            </div>
+            <div class="input-group">
+                <label>Репозиторий (username/repo):</label>
+                <input type="text" id="githubRepo" placeholder="yourusername/savings-tracker">
+            </div>
+            <button class="btn" onclick="saveGitHubSettings()">Сохранить настройки</button>
+        </div>
+
+        <div class="savings-list">
+            <h3>📝 История побед</h3>
+            <div id="savingsList"></div>
+        </div>
+    </div>
+
+    <script>
+        // Константы
+        const GOAL = 13000;
+        const PASSWORD = '23'; // Твоё магическое число
+        const MOTIVATIONS = [
+            "Каждый шаг приближает тебя к цели! 🏍️🏠🐱🐱🐱🐱🐱🐱",
+            "Ты сильнее, чем кажется! Продолжай! 💪",
+            "Реальность не знает, с кем связалась! 😎",
+            "Маленькие победы = большой результат! 🎯",
+            "Ты уже отвоевала ${amount} AED! Так держать! 🔥",
+            "Мотоцикл и квартира ждут тебя! 🏍️🏠",
+            "Каждый дирхам - это твоя сила! 💎",
+            "Котики гордятся тобой! 🐱🐱🐱🐱🐱🐱❤️",
+            "Ты не мечтаешь - ты прёшь к цели! 💪🔥",
+            "6 котиков верят в тебя! 🐱🐱🐱🐱🐱🐱",
+            "Реальность сдается! Ты побеждаешь! ⚡"
+        ];
+        // Загрузка данных при старте
+        let savings = JSON.parse(localStorage.getItem('savings') || '[]');
+        let githubSettings = JSON.parse(localStorage.getItem('githubSettings') || '{}');
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', () => {
+            loadGitHubSettings();
+            updateDisplay();
+            if (githubSettings.token && githubSettings.repo) {
+                loadFromGitHub();
+            }
+        });
+
+        function addSaving() {
+            const amount = parseFloat(document.getElementById('amountInput').value);
+            const description = document.getElementById('descriptionInput').value;
+            const password = document.getElementById('passwordInput').value;
+            const errorMsg = document.getElementById('passwordError');
+
+            // Проверка пароля
+            if (password !== PASSWORD) {
+                errorMsg.classList.add('show');
+                document.getElementById('passwordInput').classList.add('shake');
+                setTimeout(() => {
+                    document.getElementById('passwordInput').classList.remove('shake');
+                }, 300);
+                return;
+            }
+            errorMsg.classList.remove('show');
+
+            if (!amount || amount <= 0) {
+                alert('Введи сумму экономии!');
+                return;
+            }
+
+            const saving = {
+                id: Date.now(),
+                amount: amount,
+                description: description || 'Экономия',
+                date: new Date().toISOString()
+            };
+
+            savings.unshift(saving);
+            saveSavings();
+            
+            // Очистка полей
+            document.getElementById('amountInput').value = '';
+            document.getElementById('descriptionInput').value = '';
+            document.getElementById('passwordInput').value = '';
+
+            // Обновление отображения
+            updateDisplay();
+            
+            // Анимация успеха
+            showSuccess();
+        }
+        function deleteSaving(id) {
+            if (confirm('Удалить эту запись?')) {
+                savings = savings.filter(s => s.id !== id);
+                saveSavings();
+                updateDisplay();
+            }
+        }
+
+        function saveSavings() {
+            localStorage.setItem('savings', JSON.stringify(savings));
+            
+            // Если настроен GitHub, сохраняем туда
+            if (githubSettings.token && githubSettings.repo) {
+                saveToGitHub();
+            }
+        }
+
+        function updateDisplay() {
+            const total = savings.reduce((sum, s) => sum + s.amount, 0);
+            const percentage = Math.min((total / GOAL) * 100, 100);
+            
+            // Обновление основных показателей
+            document.getElementById('totalSaved').textContent = `${total.toFixed(0)} AED`;
+            document.getElementById('progressFill').style.width = `${percentage}%`;
+            document.getElementById('progressFill').textContent = `${percentage.toFixed(1)}%`;
+
+            // Статистика
+            const uniqueDays = new Set(savings.map(s => new Date(s.date).toDateString())).size;
+            document.getElementById('daysCount').textContent = uniqueDays;
+            
+            const avgPerDay = uniqueDays > 0 ? (total / uniqueDays).toFixed(0) : 0;
+            document.getElementById('avgSaving').textContent = avgPerDay;
+
+            // Мотивация
+            updateMotivation(total);
+
+            // Список экономий
+            const list = document.getElementById('savingsList');
+            if (savings.length === 0) {
+                list.innerHTML = '<p style="text-align: center; color: #999;">Пока нет записей. Добавь первую победу!</p>';
+            } else {
+                list.innerHTML = savings.map(s => `
+                    <div class="saving-item">
+                        <div class="saving-item-header">
+                            <span class="saving-amount">+${s.amount} AED</span>
+                            <div>
+                                <span class="saving-date">${formatDate(s.date)}</span>
+                                <button class="delete-btn" onclick="deleteSaving(${s.id})">✕</button>
+                            </div>
+                        </div>
+                        <div class="saving-description">${s.description}</div>
+                    </div>
+                `).join('');
+            }
+        }
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            const today = new Date();
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+
+            if (date.toDateString() === today.toDateString()) {
+                return 'Сегодня';
+            } else if (date.toDateString() === yesterday.toDateString()) {
+                return 'Вчера';
+            } else {
+                return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
+            }
+        }
+
+        function updateMotivation(total) {
+            const motivation = MOTIVATIONS[Math.floor(Math.random() * MOTIVATIONS.length)];
+            document.getElementById('motivation').textContent = motivation.replace('${amount}', total.toFixed(0));
+        }
+
+        function showSuccess() {
+            const btn = document.querySelector('.btn');
+            const originalText = btn.textContent;
+            btn.textContent = '✅ Записано!';
+            btn.style.background = 'linear-gradient(135deg, #00b09b, #96c93d)';
+            
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = '';
+            }, 2000);
+        }
+
+        // GitHub интеграция
+        function saveGitHubSettings() {
+            githubSettings = {
+                token: document.getElementById('githubToken').value,
+                repo: document.getElementById('githubRepo').value
+            };
+            
+            if (githubSettings.token && githubSettings.repo) {
+                localStorage.setItem('githubSettings', JSON.stringify(githubSettings));
+                alert('Настройки GitHub сохранены! Теперь данные будут синхронизироваться.');
+                saveToGitHub();
+            }
+        }
+
+        function loadGitHubSettings() {
+            if (githubSettings.token) {
+                document.getElementById('githubToken').value = githubSettings.token;
+            }
+            if (githubSettings.repo) {
+                document.getElementById('githubRepo').value = githubSettings.repo;
+            }
+        }
+        async function saveToGitHub() {
+            if (!githubSettings.token || !githubSettings.repo) return;
+
+            try {
+                const [owner, repo] = githubSettings.repo.split('/');
+                const path = 'savings-data.json';
+                
+                // Получаем текущий файл (если есть)
+                let sha;
+                try {
+                    const getResponse = await fetch(
+                        `https://api.github.com/repos/${owner}/${repo}/contents/${path}`,
+                        {
+                            headers: {
+                                'Authorization': `token ${githubSettings.token}`,
+                                'Accept': 'application/vnd.github.v3+json'
+                            }
+                        }
+                    );
+                    
+                    if (getResponse.ok) {
+                        const data = await getResponse.json();
+                        sha = data.sha;
+                    }
+                } catch (e) {
+                    // Файл не существует, это нормально
+                }
+
+                // Сохраняем данные
+                const content = btoa(unescape(encodeURIComponent(JSON.stringify(savings, null, 2))));
+                
+                const response = await fetch(
+                    `https://api.github.com/repos/${owner}/${repo}/contents/${path}`,
+                    {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `token ${githubSettings.token}`,
+                            'Accept': 'application/vnd.github.v3+json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            message: `Update savings: ${new Date().toLocaleString('ru-RU')}`,
+                            content: content,
+                            sha: sha
+                        })
+                    }
+                );
+
+                if (!response.ok) {
+                    console.error('GitHub save failed:', await response.text());
+                }
+            } catch (error) {
+                console.error('GitHub save error:', error);
+            }
+        }
+        async function loadFromGitHub() {
+            if (!githubSettings.token || !githubSettings.repo) return;
+
+            try {
+                const [owner, repo] = githubSettings.repo.split('/');
+                const path = 'savings-data.json';
+                
+                const response = await fetch(
+                    `https://api.github.com/repos/${owner}/${repo}/contents/${path}`,
+                    {
+                        headers: {
+                            'Authorization': `token ${githubSettings.token}`,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    }
+                );
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const content = JSON.parse(atob(data.content));
+                    
+                    // Объединяем данные (приоритет - GitHub)
+                    savings = content;
+                    localStorage.setItem('savings', JSON.stringify(savings));
+                    updateDisplay();
+                }
+            } catch (error) {
+                console.error('GitHub load error:', error);
+            }
+        }
+    </script>
+</body>
+</html>
