@@ -354,7 +354,7 @@
                 <div class="password-group">
                     <input type="password" id="passwordInput" placeholder="Введи пароль">
                 </div>
-                <div class="password-hint">Подсказка: твоё любимое число 😉</div>
+                <div class="password-hint">Подсказка: ты знаешь 😉</div>
                 <div class="error-message" id="passwordError">Неверный пароль!</div>
             </div>
             <button class="btn" onclick="addSaving()">Записать победу! 🎉</button>
@@ -625,7 +625,7 @@
 
         // Сохранить зашифрованный бэкап в GitHub (без токена!)
         async function saveToGitHubPublic() {
-            const password = prompt('Введи пароль для подтверждения (23):');
+            const password = prompt('Введи пароль для подтверждения:');
             if (password !== PASSWORD) {
                 alert('Неверный пароль!');
                 return;
